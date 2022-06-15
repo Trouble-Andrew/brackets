@@ -1,21 +1,17 @@
 module.exports = function check(str, bracketsConfig) {
-  let flag = true;
+  const stack = [];
+  const arr = str.split('');
+  const brackets = Object.fromEntries(bracketsConfig);
 
-  function removeBrackets() {
-    flag = false;
-    for (const brackets of bracketsConfig) {
-        let bracketsPair = `${brackets[0]}${brackets[1]}`;
-        while (str.indexOf(bracketsPair) >= 0) {
-            str = str.replace(bracketsPair, '');
-            flag = true;
-        }
+  if (arr.length % 2 !== 0) return false;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === brackets[`${stack[stack.length - 1]}`]) {
+      stack.pop();
+    } else if (brackets.hasOwnProperty(arr[i])) {
+      stack.push(arr[i]);
     }
-
-    if (str.length > 0 && flag === true) {
-        removeBrackets();
-    }        
   }
 
-  removeBrackets();
-  return flag;
+  return stack.length === 0;
 }
